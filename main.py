@@ -22,11 +22,11 @@ dis = pygame.display.set_mode((dis_width, dis_height))
 pygame.display.set_caption('Snake Game')
 
 clock = pygame.time.Clock()
-snake_block = 7
+snake_block = 10
 snake_speed = 12
 
-font_style = pygame.font.SysFont(None, 30)
-score_font = pygame.font.SysFont(None, 30)
+font_style = pygame.font.SysFont(None, 25)
+score_font = pygame.font.SysFont(None, 25)
 
 def our_snake(snake_block, snake_list):
     for x in snake_list:
@@ -38,8 +38,7 @@ def draw_obstacles(obstacles):
 
 def message(msg, color):
     mesg = font_style.render(msg, True, color)
-    mesg_rect = mesg.get_rect(center=(dis_width / 2, dis_height / 2))
-    dis.blit(mesg, mesg_rect)
+    dis.blit(mesg, [dis_width / 6, dis_height / 3])
 
 def show_score(score):
     value = score_font.render("Score: " + str(score), True, white)
@@ -103,15 +102,9 @@ def gameLoop():
         x1 += x1_change
         y1 += y1_change
 
-        # Schlange durch die Wand gehen lassen
-        if x1 >= dis_width:
-            x1 = 0
-        elif x1 < 0:
-            x1 = dis_width - snake_block
-        if y1 >= dis_height:
-            y1 = 0
-        elif y1 < 0:
-            y1 = dis_height - snake_block
+        # Beende das Spiel, wenn die Schlange die Ränder des Spielfelds erreicht
+        if x1 >= dis_width or x1 < 0 or y1 >= dis_height or y1 < 0:
+            game_close = True
 
         dis.fill(blue)
         pygame.draw.rect(dis, green, [foodx, foody, snake_block, snake_block])
