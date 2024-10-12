@@ -11,6 +11,7 @@ black = (0, 0, 0)
 red = (213, 50, 80)
 green = (0, 255, 0)
 blue = (50, 153, 213)
+gray = (169, 169, 169)
 
 # Display-Größe
 dis_width = 800
@@ -31,6 +32,10 @@ def our_snake(snake_block, snake_list):
     for x in snake_list:
         pygame.draw.rect(dis, black, [x[0], x[1], snake_block, snake_block])
 
+def draw_obstacles(obstacles):
+    for obstacle in obstacles:
+        pygame.draw.rect(dis, gray, [obstacle[0], obstacle[1], snake_block, snake_block])
+
 def message(msg, color):
     mesg = font_style.render(msg, True, color)
     dis.blit(mesg, [dis_width / 6, dis_height / 3])
@@ -50,6 +55,12 @@ def gameLoop():
 
     foodx = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
     foody = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
+
+    obstacles = []
+    for _ in range(10):  # Anzahl der Hindernisse
+        obs_x = round(random.randrange(0, dis_width - snake_block) / 10.0) * 10.0
+        obs_y = round(random.randrange(0, dis_height - snake_block) / 10.0) * 10.0
+        obstacles.append([obs_x, obs_y])
 
     while not game_over:
 
@@ -100,7 +111,12 @@ def gameLoop():
             if x == snake_Head:
                 game_close = True
 
+        for obstacle in obstacles:
+            if x1 == obstacle[0] and y1 == obstacle[1]:
+                game_close = True
+
         our_snake(snake_block, snake_List)
+        draw_obstacles(obstacles)
         pygame.display.update()
 
         if x1 == foodx and y1 == foody:
